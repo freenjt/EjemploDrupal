@@ -1,0 +1,9 @@
+<?php
+function Departamento_menu(){
+$items['Departamento-Colombia']=array(
+    'title'=>"Departamentos de Colombia",
+    'page callback'=>'departamentos_colombia',
+    'access callback'=>'true',
+    );
+}
+?>

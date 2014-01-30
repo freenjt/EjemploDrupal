@@ -1,0 +1,4 @@
+name=Departamento
+description="Modulo que muestra un Crud de los departamentos de Colombia"
+package=Departamentos de Colombia
+core=7.x

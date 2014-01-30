@@ -1,0 +1,104 @@
+<style type="text/css">
+	.saludo{
+		font-style: oblique;
+		background-color: green;
+	}
+	.bueno{
+		font-style: italic;
+		font-size: 40px;
+		color: red;
+	}	
+</style>
+
+<?php
+/**
+ * @file
+ * Archivo para empezar a programar con Drupal
+ */
+
+/**
+ * Implementa hook_menu().
+ */
+function saludar_menu() {
+  $items['saludar/hola-mundo'] = array(
+    'title' => 'Saludar',
+    'page callback' => 'saludar_hola_mundo',
+    'type' => MENU_CALLBACK,
+    'access callback' => TRUE,
+  );
+    $items['admin/config/content/saludar'] = array(
+    'title' => 'Saludar',
+    'description' => 'Configurar las opciones para el saludo.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('saludar_configuracion'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'saludar.admin.inc',
+  );
+  return $items;
+}
+
+/**
+ * Callback que implementa la página: saludar/hola-mundo.
+ */
+function saludar_hola_mundo() {
+	$variables = array(
+    'message' => variable_get('saludar_saludo', 'Hola Mundo'),
+  );
+  return theme('saludar_hola_mundo', $variables);
+  //return "<p class='saludo'>Hola Mundo</p>";
+}
+
+// Funcion que asigna la informacion o la descripcion de un bloque
+function saludar_block_info() {
+  $blocks['hola_mundo'] = array(
+    'info' => 'Bloque para Hola Mundo',
+  );
+  return $blocks;
+}
+
+//Funcion para mostrar un saludo en un bloque
+function saludar_block_view($delta = '') {
+  switch ($delta) {
+    case 'hola_mundo':
+      $block['content'] = saludar_hola_mundo();
+      return $block;   
+  }
+}
+
+// Funcion para mostrar un mensaje de saludo al usuario que se loguea
+/*
+function saludar_user_login(&$edit, $account) {
+  drupal_set_message("Hola " . $account->name);
+}*/
+
+/**
+ * Acción de drupal que saluda al usuario.
+ */
+function saludar_usuario_action() {
+  $message = "¡Bienvenido!";
+  if (user_is_logged_in()) {
+    $message = "Hola " . $GLOBALS['user']->name;
+  }
+  drupal_set_message($message);
+}
+// Funcion hook_action_info
+function saludar_action_info() {
+  return array(
+    'saludar_usuario_action' => array(
+      'type' => 'user',
+      'label' => 'Saludar al usuario',
+      'configurable' => FALSE,
+      'triggers' => array('any'),
+    ),
+  );
+}
+
+//Funcion para redirigir el mensaje a una plantilla predefinida
+function saludar_theme() {
+  return array(
+    'saludar_hola_mundo' => array(
+      'template' => 'saludar-hola-mundo',
+    ),
+  );
+}
+  ?>
